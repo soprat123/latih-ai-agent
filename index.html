@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Latihan AI Agent</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="hero" aria-labelledby="judul-utama">
+      <p class="badge">HTML • CSS • JavaScript</p>
+      <h1 id="judul-utama">Latihan AI Agent</h1>
+      <p class="description">
+        Website sederhana untuk mencoba alur kerja AI Agent: tulis perintah,
+        jalankan, lalu lihat hasilnya langsung di halaman.
+      </p>
+    </section>
+
+    <section class="panel" aria-label="Area latihan perintah AI Agent">
+      <label for="commandInput">Kolom perintah</label>
+      <textarea
+        id="commandInput"
+        rows="6"
+        placeholder="Contoh: Buat ringkasan fitur website ini"
+      ></textarea>
+
+      <button id="runButton" type="button">Jalankan</button>
+
+      <div class="result-wrapper">
+        <h2>Area hasil</h2>
+        <pre id="resultOutput">Hasil perintah akan tampil di sini.</pre>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
