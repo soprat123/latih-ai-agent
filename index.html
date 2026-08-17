@@ -3,120 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lutful Store - Toko Moro Seneng</title>
+  <title>Lutful Store - Marketplace Sederhana</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <header class="site-header">
-    <nav class="navbar" aria-label="Navigasi utama">
-      <a class="brand" href="#top" aria-label="Lutful Store">
+    <div class="header-inner">
+      <a class="brand" href="#">
         <span class="brand-mark">LS</span>
-        <span>
+        <span class="brand-text">
           <strong>Lutful Store</strong>
-          <small>moro seneng</small>
+          <small>marketplace sederhana</small>
         </span>
       </a>
-      <button class="cart-toggle" id="cartToggle" type="button" aria-controls="cartPanel" aria-expanded="false">
-        Keranjang <span id="cartCount">0</span>
-      </button>
-    </nav>
+      <nav class="main-nav" aria-label="Navigasi utama">
+        <a href="#produk">Produk</a>
+        <a href="#kategori">Kategori</a>
+      </nav>
+    </div>
   </header>
 
-  <main id="top">
-    <section class="hero" aria-labelledby="heroTitle">
-      <div class="hero-content">
-        <p class="eyebrow">Promo belanja harian</p>
-        <h1 id="heroTitle">Belanja kebutuhan favorit di Lutful Store.</h1>
-        <p>
-          Temukan produk contoh pilihan dengan tampilan modern, pencarian cepat,
-          filter kategori, dan simulasi checkout yang mudah digunakan.
-        </p>
-        <a class="hero-button" href="#catalog">Lihat Katalog</a>
-      </div>
-      <div class="promo-card" aria-label="Banner promosi">
-        <span>Diskon Simulasi</span>
-        <strong>Hemat sampai 35%</strong>
-        <p>Untuk produk pilihan minggu ini. Checkout masih berupa simulasi.</p>
+  <main>
+
+    <section class="search-section" aria-label="Pencarian produk">
+      <form class="search-box" action="#" method="get">
+        <input type="search" name="q" placeholder="Cari produk, misal: sepatu, kopi, laptop..." aria-label="Cari produk" />
+        <button type="submit">Cari</button>
+      </form>
+    </section>
+
+    <section class="category-section" id="kategori" aria-label="Kategori produk">
+      <h2 class="section-title">Kategori</h2>
+      <div class="category-list">
+        <a class="category-chip active" href="#produk">Semua</a>
+        <a class="category-chip" href="#produk">Elektronik</a>
+        <a class="category-chip" href="#produk">Fashion</a>
+        <a class="category-chip" href="#produk">Makanan</a>
+        <a class="category-chip" href="#produk">Aksesori</a>
+        <a class="category-chip" href="#produk">Olahraga</a>
       </div>
     </section>
 
-    <section class="controls" aria-label="Pencarian dan filter produk">
-      <label for="searchInput">
-        Cari Produk
-        <input id="searchInput" type="search" placeholder="Cari laptop, kopi, sepatu..." autocomplete="off" />
-      </label>
-      <label for="categoryFilter">
-        Kategori
-        <select id="categoryFilter">
-          <option value="all">Semua Kategori</option>
-        </select>
-      </label>
+    <section class="product-section" id="produk" aria-label="Daftar produk">
+      <h2 class="section-title">Produk Pilihan</h2>
+
+      <div class="product-grid">
+
+        <article class="product-card">
+          <div class="product-image" aria-hidden="true">🎧</div>
+          <div class="product-body">
+            <span class="product-category">Elektronik</span>
+            <h3 class="product-name">Headphone Bluetooth</h3>
+            <p class="product-price">Rp299.000</p>
+            <button class="buy-button" type="button">Beli</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image" aria-hidden="true">👟</div>
+          <div class="product-body">
+            <span class="product-category">Fashion</span>
+            <h3 class="product-name">Sepatu Sneakers Casual</h3>
+            <p class="product-price">Rp450.000</p>
+            <button class="buy-button" type="button">Beli</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image" aria-hidden="true">☕</div>
+          <div class="product-body">
+            <span class="product-category">Makanan</span>
+            <h3 class="product-name">Kopi Arabika 250g</h3>
+            <p class="product-price">Rp85.000</p>
+            <button class="buy-button" type="button">Beli</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image" aria-hidden="true">⌚</div>
+          <div class="product-body">
+            <span class="product-category">Aksesori</span>
+            <h3 class="product-name">Jam Tangan Digital</h3>
+            <p class="product-price">Rp199.000</p>
+            <button class="buy-button" type="button">Beli</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image" aria-hidden="true">🎒</div>
+          <div class="product-body">
+            <span class="product-category">Fashion</span>
+            <h3 class="product-name">Tas Ransel Laptop</h3>
+            <p class="product-price">Rp325.000</p>
+            <button class="buy-button" type="button">Beli</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image" aria-hidden="true">🏀</div>
+          <div class="product-body">
+            <span class="product-category">Olahraga</span>
+            <h3 class="product-name">Bola Basket Ukuran 7</h3>
+            <p class="product-price">Rp150.000</p>
+            <button class="buy-button" type="button">Beli</button>
+          </div>
+        </article>
+
+      </div>
     </section>
 
-    <section class="catalog-section" id="catalog" aria-labelledby="catalogTitle">
-      <div class="section-heading">
-        <p class="eyebrow">Katalog</p>
-        <h2 id="catalogTitle">Produk Pilihan</h2>
-      </div>
-      <div class="product-grid" id="productGrid" aria-live="polite"></div>
-    </section>
   </main>
 
-  <aside class="cart-panel" id="cartPanel" aria-label="Panel keranjang belanja">
-    <div class="cart-header">
-      <div>
-        <p class="eyebrow">Keranjang</p>
-        <h2>Belanjaan Anda</h2>
-      </div>
-      <button class="close-cart" id="closeCart" type="button" aria-label="Tutup keranjang">x</button>
-    </div>
-
-    <div class="cart-items" id="cartItems"></div>
-
-    <div class="cart-summary">
-      <div>
-        <span>Total Barang</span>
-        <strong id="cartTotalItems">0</strong>
-      </div>
-      <div>
-        <span>Total Harga</span>
-        <strong id="cartTotalPrice">Rp0</strong>
-      </div>
-    </div>
-
-    <form class="checkout-form" id="checkoutForm" novalidate>
-      <h3>Checkout Simulasi</h3>
-      <label for="customerName">Nama Lengkap</label>
-      <input id="customerName" name="customerName" type="text" placeholder="Nama penerima" required />
-
-      <label for="customerWhatsapp">Nomor WhatsApp</label>
-      <input id="customerWhatsapp" name="customerWhatsapp" type="tel" placeholder="08xxxxxxxxxx" required />
-
-      <label for="customerAddress">Alamat Pengiriman</label>
-      <textarea id="customerAddress" name="customerAddress" rows="3" placeholder="Tulis alamat lengkap" required></textarea>
-
-      <label for="paymentMethod">Metode Pembayaran</label>
-      <select id="paymentMethod" name="paymentMethod" required>
-        <option value="">Pilih metode</option>
-        <option value="Transfer Bank">Transfer Bank</option>
-        <option value="COD">COD</option>
-        <option value="E-Wallet">E-Wallet</option>
-      </select>
-
-      <p class="form-message" id="formMessage" role="alert"></p>
-      <button class="checkout-button" type="submit">Buat Pesanan Simulasi</button>
-    </form>
-
-    <div class="order-result" id="orderResult" aria-live="polite"></div>
-  </aside>
-
-  <div class="overlay" id="overlay" hidden></div>
-
   <footer class="site-footer">
-    <strong>Lutful Store - moro seneng</strong>
-    <p>Website jual-beli modern berbasis HTML, CSS, dan JavaScript biasa. Semua produk dan pembayaran adalah data contoh.</p>
+    <strong>Lutful Store</strong>
+    <p>Marketplace sederhana berbasis HTML dan CSS. Semua produk adalah data contoh.</p>
+    <small>&copy; 2026 Lutful Store. Semua hak dilindungi.</small>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 </html>
