@@ -27,30 +27,37 @@
   <main>
 
     <section class="search-section" aria-label="Pencarian produk">
-      <form class="search-box" action="#" method="get">
-        <input type="search" name="q" placeholder="Cari produk, misal: sepatu, kopi, laptop..." aria-label="Cari produk" />
+      <form class="search-box" action="#" method="get" id="searchForm">
+        <input
+          type="search"
+          name="q"
+          id="searchInput"
+          placeholder="Cari produk, misal: sepatu, kopi, laptop..."
+          aria-label="Cari produk"
+          autocomplete="off"
+        />
         <button type="submit">Cari</button>
       </form>
     </section>
 
     <section class="category-section" id="kategori" aria-label="Kategori produk">
       <h2 class="section-title">Kategori</h2>
-      <div class="category-list">
-        <a class="category-chip active" href="#produk">Semua</a>
-        <a class="category-chip" href="#produk">Elektronik</a>
-        <a class="category-chip" href="#produk">Fashion</a>
-        <a class="category-chip" href="#produk">Makanan</a>
-        <a class="category-chip" href="#produk">Aksesori</a>
-        <a class="category-chip" href="#produk">Olahraga</a>
+      <div class="category-list" id="categoryList">
+        <button type="button" class="category-chip active" data-category="semua">Semua</button>
+        <button type="button" class="category-chip" data-category="elektronik">Elektronik</button>
+        <button type="button" class="category-chip" data-category="fashion">Fashion</button>
+        <button type="button" class="category-chip" data-category="makanan">Makanan</button>
+        <button type="button" class="category-chip" data-category="aksesori">Aksesori</button>
+        <button type="button" class="category-chip" data-category="olahraga">Olahraga</button>
       </div>
     </section>
 
     <section class="product-section" id="produk" aria-label="Daftar produk">
       <h2 class="section-title">Produk Pilihan</h2>
 
-      <div class="product-grid">
+      <div class="product-grid" id="productGrid">
 
-        <article class="product-card">
+        <article class="product-card" data-category="elektronik" data-name="headphone bluetooth">
           <div class="product-image" aria-hidden="true">🎧</div>
           <div class="product-body">
             <span class="product-category">Elektronik</span>
@@ -60,7 +67,7 @@
           </div>
         </article>
 
-        <article class="product-card">
+        <article class="product-card" data-category="fashion" data-name="sepatu sneakers casual">
           <div class="product-image" aria-hidden="true">👟</div>
           <div class="product-body">
             <span class="product-category">Fashion</span>
@@ -70,7 +77,7 @@
           </div>
         </article>
 
-        <article class="product-card">
+        <article class="product-card" data-category="makanan" data-name="kopi arabika 250g">
           <div class="product-image" aria-hidden="true">☕</div>
           <div class="product-body">
             <span class="product-category">Makanan</span>
@@ -80,7 +87,7 @@
           </div>
         </article>
 
-        <article class="product-card">
+        <article class="product-card" data-category="aksesori" data-name="jam tangan digital">
           <div class="product-image" aria-hidden="true">⌚</div>
           <div class="product-body">
             <span class="product-category">Aksesori</span>
@@ -90,7 +97,7 @@
           </div>
         </article>
 
-        <article class="product-card">
+        <article class="product-card" data-category="fashion" data-name="tas ransel laptop">
           <div class="product-image" aria-hidden="true">🎒</div>
           <div class="product-body">
             <span class="product-category">Fashion</span>
@@ -100,7 +107,7 @@
           </div>
         </article>
 
-        <article class="product-card">
+        <article class="product-card" data-category="olahraga" data-name="bola basket ukuran 7">
           <div class="product-image" aria-hidden="true">🏀</div>
           <div class="product-body">
             <span class="product-category">Olahraga</span>
@@ -111,15 +118,18 @@
         </article>
 
       </div>
+
+      <p class="empty-state" id="emptyState" hidden>Produk tidak ditemukan</p>
     </section>
 
   </main>
 
   <footer class="site-footer">
     <strong>Lutful Store</strong>
-    <p>Marketplace sederhana berbasis HTML dan CSS. Semua produk adalah data contoh.</p>
+    <p>Marketplace sederhana berbasis HTML, CSS, dan JavaScript. Semua produk adalah data contoh.</p>
     <small>&copy; 2026 Lutful Store. Semua hak dilindungi.</small>
   </footer>
 
+  <script src="script.js"></script>
 </body>
 </html>
