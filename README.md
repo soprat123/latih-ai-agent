@@ -1,24 +1,26 @@
-# Latihan AI Agent
+# Lutful Store
 
-Latihan AI Agent adalah website sederhana berbasis HTML, CSS, dan JavaScript biasa. Website ini dibuat untuk mencoba alur dasar AI Agent: menulis perintah, menekan tombol Jalankan, lalu menampilkan hasil perintah di halaman.
+Lutful Store adalah website marketplace sederhana berbasis HTML, CSS, dan JavaScript biasa. Pengguna dapat mencari produk dan memfilter daftar produk berdasarkan kategori.
 
 ## Fitur
 
-- Menampilkan judul dan penjelasan singkat tentang Latihan AI Agent.
-- Menyediakan kolom perintah untuk menulis instruksi.
-- Memiliki tombol Jalankan untuk memproses isi kolom perintah.
-- Menampilkan isi perintah ke area hasil.
-- Menggunakan tema hitam, biru, dan putih.
-- Responsif sehingga nyaman dibuka melalui HP maupun desktop.
+- Menampilkan daftar produk contoh dalam grid responsif.
+- Pencarian produk berdasarkan nama (tidak membedakan huruf besar/kecil).
+- Filter kategori: Semua, Elektronik, Fashion, Makanan, Aksesori, dan Olahraga.
+- Kategori aktif ditandai secara visual.
+- Pesan "Produk tidak ditemukan" muncul jika tidak ada hasil.
+- Pencarian dan filter kategori dapat digunakan bersamaan.
+- Tema hitam, biru, dan putih.
+- Responsif untuk HP maupun desktop.
 - Dibuat tanpa framework, hanya memakai HTML, CSS, dan JavaScript biasa.
 
 ## Struktur File
 
 | File | Fungsi |
 |---|---|
-| `index.html` | Struktur utama halaman website, termasuk judul, penjelasan, kolom perintah, tombol, dan area hasil. |
-| `style.css` | Mengatur tampilan website, warna tema, layout, tombol, area hasil, dan responsivitas untuk HP. |
-| `script.js` | Mengatur interaksi tombol Jalankan agar isi kolom perintah tampil di area hasil. |
+| `index.html` | Struktur utama halaman: header, pencarian, kategori, daftar produk, dan footer. |
+| `style.css` | Mengatur tampilan website, warna tema, layout, kartu produk, dan responsivitas. |
+| `script.js` | Mengatur pencarian produk dan filter kategori. |
 | `README.md` | Dokumentasi fitur, struktur file, dan cara menjalankan website. |
 
 ## Cara Menjalankan Website
@@ -26,9 +28,9 @@ Latihan AI Agent adalah website sederhana berbasis HTML, CSS, dan JavaScript bia
 1. Clone atau unduh repository ini.
 2. Buka folder repository.
 3. Buka file `index.html` langsung di browser.
-4. Tulis perintah pada kolom perintah.
-5. Klik tombol Jalankan.
-6. Lihat isi perintah muncul di area hasil.
+4. Ketik nama produk di kolom pencarian untuk memfilter hasil.
+5. Klik chip kategori untuk menampilkan produk sesuai kategori.
+6. Jika tidak ada hasil, pesan "Produk tidak ditemukan" akan ditampilkan.
 
 ## Teknologi
 

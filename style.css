@@ -176,7 +176,9 @@ body {
   color: var(--white);
   text-decoration: none;
   font-size: 0.85rem;
+  font-family: inherit;
   white-space: nowrap;
+  cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 }
 
@@ -211,6 +213,11 @@ body {
   display: flex;
   flex-direction: column;
   transition: transform 0.2s, border-color 0.2s;
+}
+
+.product-card.is-hidden,
+.product-card[hidden] {
+  display: none;
 }
 
 .product-card:hover {
@@ -276,6 +283,22 @@ body {
 
 .buy-button:active {
   transform: scale(0.98);
+}
+
+.empty-state {
+  margin-top: 24px;
+  padding: 28px 16px;
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  background-color: var(--card-bg);
+  color: var(--gray);
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.empty-state[hidden] {
+  display: none;
 }
 
 /* ===== Footer ===== */
