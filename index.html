@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lutful Store - Marketplace Sederhana</title>
+  <title>Lutful Store - Online Shop Interaktif</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -14,13 +14,20 @@
         <span class="brand-mark">LS</span>
         <span class="brand-text">
           <strong>Lutful Store</strong>
-          <small>marketplace sederhana</small>
+          <small>online shop sederhana</small>
         </span>
       </a>
+
       <nav class="main-nav" aria-label="Navigasi utama">
         <a href="#produk">Produk</a>
         <a href="#kategori">Kategori</a>
       </nav>
+
+      <button type="button" class="cart-button" id="cartButton" aria-label="Buka keranjang belanja">
+        <span class="cart-icon" aria-hidden="true">🛒</span>
+        <span class="cart-label">Keranjang</span>
+        <span class="cart-badge" id="cartBadge" hidden>0</span>
+      </button>
     </div>
   </header>
 
@@ -53,71 +60,20 @@
     </section>
 
     <section class="product-section" id="produk" aria-label="Daftar produk">
-      <h2 class="section-title">Produk Pilihan</h2>
-
-      <div class="product-grid" id="productGrid">
-
-        <article class="product-card" data-category="elektronik" data-name="headphone bluetooth">
-          <div class="product-image" aria-hidden="true">🎧</div>
-          <div class="product-body">
-            <span class="product-category">Elektronik</span>
-            <h3 class="product-name">Headphone Bluetooth</h3>
-            <p class="product-price">Rp299.000</p>
-            <button class="buy-button" type="button">Beli</button>
-          </div>
-        </article>
-
-        <article class="product-card" data-category="fashion" data-name="sepatu sneakers casual">
-          <div class="product-image" aria-hidden="true">👟</div>
-          <div class="product-body">
-            <span class="product-category">Fashion</span>
-            <h3 class="product-name">Sepatu Sneakers Casual</h3>
-            <p class="product-price">Rp450.000</p>
-            <button class="buy-button" type="button">Beli</button>
-          </div>
-        </article>
-
-        <article class="product-card" data-category="makanan" data-name="kopi arabika 250g">
-          <div class="product-image" aria-hidden="true">☕</div>
-          <div class="product-body">
-            <span class="product-category">Makanan</span>
-            <h3 class="product-name">Kopi Arabika 250g</h3>
-            <p class="product-price">Rp85.000</p>
-            <button class="buy-button" type="button">Beli</button>
-          </div>
-        </article>
-
-        <article class="product-card" data-category="aksesori" data-name="jam tangan digital">
-          <div class="product-image" aria-hidden="true">⌚</div>
-          <div class="product-body">
-            <span class="product-category">Aksesori</span>
-            <h3 class="product-name">Jam Tangan Digital</h3>
-            <p class="product-price">Rp199.000</p>
-            <button class="buy-button" type="button">Beli</button>
-          </div>
-        </article>
-
-        <article class="product-card" data-category="fashion" data-name="tas ransel laptop">
-          <div class="product-image" aria-hidden="true">🎒</div>
-          <div class="product-body">
-            <span class="product-category">Fashion</span>
-            <h3 class="product-name">Tas Ransel Laptop</h3>
-            <p class="product-price">Rp325.000</p>
-            <button class="buy-button" type="button">Beli</button>
-          </div>
-        </article>
-
-        <article class="product-card" data-category="olahraga" data-name="bola basket ukuran 7">
-          <div class="product-image" aria-hidden="true">🏀</div>
-          <div class="product-body">
-            <span class="product-category">Olahraga</span>
-            <h3 class="product-name">Bola Basket Ukuran 7</h3>
-            <p class="product-price">Rp150.000</p>
-            <button class="buy-button" type="button">Beli</button>
-          </div>
-        </article>
-
+      <div class="product-toolbar">
+        <h2 class="section-title">Produk Pilihan</h2>
+        <label class="sort-control">
+          <span class="sort-label">Urutkan:</span>
+          <select id="sortSelect" aria-label="Urutkan produk">
+            <option value="default">Default</option>
+            <option value="price-asc">Harga termurah</option>
+            <option value="price-desc">Harga termahal</option>
+            <option value="name-asc">Nama A-Z</option>
+          </select>
+        </label>
       </div>
+
+      <div class="product-grid" id="productGrid"></div>
 
       <p class="empty-state" id="emptyState" hidden>Produk tidak ditemukan</p>
     </section>
@@ -126,9 +82,95 @@
 
   <footer class="site-footer">
     <strong>Lutful Store</strong>
-    <p>Marketplace sederhana berbasis HTML, CSS, dan JavaScript. Semua produk adalah data contoh.</p>
+    <p>Online shop sederhana berbasis HTML, CSS, dan JavaScript. Semua produk adalah data contoh.</p>
     <small>&copy; 2026 Lutful Store. Semua hak dilindungi.</small>
   </footer>
+
+  <!-- Overlay bersama untuk drawer & modal -->
+  <div class="overlay" id="overlay" hidden></div>
+
+  <!-- Drawer keranjang -->
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Keranjang belanja" aria-hidden="true">
+    <div class="cart-drawer-header">
+      <h2>🛒 Keranjang</h2>
+      <button type="button" class="icon-close" id="cartCloseBtn" aria-label="Tutup keranjang">&times;</button>
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <p class="cart-empty" id="cartEmpty">Keranjang masih kosong.</p>
+
+    <div class="cart-summary" id="cartSummary" hidden>
+      <div class="cart-summary-row">
+        <span>Jumlah item</span>
+        <strong id="cartTotalItems">0</strong>
+      </div>
+      <div class="cart-summary-row cart-summary-total">
+        <span>Total</span>
+        <strong id="cartTotalPrice">Rp0</strong>
+      </div>
+      <button type="button" class="checkout-button" id="checkoutButton">Checkout</button>
+    </div>
+  </aside>
+
+  <!-- Modal detail produk -->
+  <div class="modal" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailName" hidden>
+    <div class="modal-content">
+      <button type="button" class="icon-close" id="detailCloseBtn" aria-label="Tutup detail produk">&times;</button>
+      <div class="detail-image" id="detailImage" aria-hidden="true">🛍️</div>
+      <span class="product-category" id="detailCategory"></span>
+      <h2 class="detail-name" id="detailName"></h2>
+      <p class="detail-price" id="detailPrice"></p>
+      <p class="detail-stock" id="detailStock"></p>
+      <p class="detail-description" id="detailDescription"></p>
+      <button type="button" class="buy-button" id="detailAddBtn">Tambah ke Keranjang</button>
+    </div>
+  </div>
+
+  <!-- Modal checkout -->
+  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle" hidden>
+    <div class="modal-content">
+      <button type="button" class="icon-close" id="checkoutCloseBtn" aria-label="Tutup checkout">&times;</button>
+      <h2 id="checkoutTitle">Checkout</h2>
+
+      <div class="checkout-summary">
+        <h3>Ringkasan Pesanan</h3>
+        <ul id="checkoutSummaryList"></ul>
+        <div class="checkout-total-row">
+          <span>Total Akhir</span>
+          <strong id="checkoutTotal">Rp0</strong>
+        </div>
+      </div>
+
+      <form id="checkoutForm" novalidate>
+        <div class="form-field">
+          <label for="buyerName">Nama Pembeli</label>
+          <input type="text" id="buyerName" name="buyerName" placeholder="Nama lengkap" required />
+        </div>
+        <div class="form-field">
+          <label for="buyerPhone">Nomor HP</label>
+          <input type="tel" id="buyerPhone" name="buyerPhone" placeholder="08xxxxxxxxxx" required />
+        </div>
+        <div class="form-field">
+          <label for="buyerAddress">Alamat</label>
+          <textarea id="buyerAddress" name="buyerAddress" rows="3" placeholder="Alamat pengiriman" required></textarea>
+        </div>
+        <p class="form-error" id="checkoutError" hidden>Semua field wajib diisi.</p>
+        <button type="submit" class="checkout-button">Buat Pesanan</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal sukses -->
+  <div class="modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle" hidden>
+    <div class="modal-content modal-success">
+      <button type="button" class="icon-close" id="successCloseBtn" aria-label="Tutup pesan sukses">&times;</button>
+      <div class="success-icon" aria-hidden="true">✅</div>
+      <h2 id="successTitle">Pesanan Berhasil!</h2>
+      <p id="successMessage">Terima kasih, pesanan Anda sedang diproses.</p>
+      <button type="button" class="checkout-button" id="successOkBtn">Belanja Lagi</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
