@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Lutful Store - marketplace sederhana berbasis HTML, CSS, dan JavaScript vanilla dengan keranjang, favorit, dan checkout simulasi." />
   <title>Lutful Store - Marketplace Sederhana</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -25,6 +26,29 @@
         </nav>
 
         <button
+          class="icon-toggle"
+          id="themeToggle"
+          type="button"
+          aria-label="Ganti tema terang atau gelap"
+          aria-pressed="false"
+        >
+          <span class="icon-toggle-icon" id="themeToggleIcon" aria-hidden="true">🌙</span>
+          <span class="icon-toggle-text" id="themeToggleText">Gelap</span>
+        </button>
+
+        <button
+          class="icon-toggle"
+          id="wishlistToggle"
+          type="button"
+          aria-label="Tampilkan hanya produk favorit"
+          aria-pressed="false"
+        >
+          <span class="icon-toggle-icon" aria-hidden="true">❤️</span>
+          <span class="icon-toggle-text">Favorit</span>
+          <span class="count-badge" id="wishlistBadge" hidden>0</span>
+        </button>
+
+        <button
           class="cart-toggle"
           id="cartToggle"
           type="button"
@@ -34,7 +58,7 @@
         >
           <span class="cart-toggle-icon" aria-hidden="true">🛒</span>
           <span class="cart-toggle-text">Keranjang</span>
-          <span class="cart-badge" id="cartBadge" hidden>0</span>
+          <span class="count-badge cart-badge" id="cartBadge" hidden>0</span>
         </button>
       </div>
     </div>
@@ -44,14 +68,23 @@
 
     <section class="search-section" aria-label="Pencarian produk">
       <form class="search-box" id="searchForm" action="#" method="get" role="search">
-        <input
-          type="search"
-          id="searchInput"
-          name="q"
-          placeholder="Cari produk, misal: sepatu, kopi, laptop..."
-          aria-label="Cari produk"
-          autocomplete="off"
-        />
+        <div class="search-input-wrap">
+          <input
+            type="search"
+            id="searchInput"
+            name="q"
+            placeholder="Cari produk, misal: sepatu, kopi, laptop..."
+            aria-label="Cari produk"
+            autocomplete="off"
+          />
+          <button
+            class="search-clear"
+            id="searchClear"
+            type="button"
+            aria-label="Hapus kata pencarian"
+            hidden
+          >×</button>
+        </div>
         <button type="submit">Cari</button>
       </form>
     </section>
@@ -70,7 +103,7 @@
 
     <section class="product-section" id="produk" aria-label="Daftar produk">
       <div class="product-toolbar">
-        <h2 class="section-title">Produk Pilihan</h2>
+        <h2 class="section-title" id="productSectionTitle">Produk Pilihan</h2>
         <div class="sort-control">
           <label for="sortSelect">Urutkan</label>
           <select id="sortSelect" aria-label="Urutkan produk">
@@ -78,9 +111,12 @@
             <option value="price-asc">Harga termurah</option>
             <option value="price-desc">Harga termahal</option>
             <option value="name-asc">Nama A-Z</option>
+            <option value="rating-desc">Rating tertinggi</option>
           </select>
         </div>
       </div>
+
+      <p class="result-info" id="resultInfo" aria-live="polite"></p>
 
       <div class="product-grid" id="productGrid"></div>
       <p class="empty-state" id="emptyState" hidden>Produk tidak ditemukan</p>
@@ -130,9 +166,12 @@
           <strong id="cartSubtotal">Rp0</strong>
         </div>
       </div>
-      <button class="primary-button checkout-button" id="checkoutButton" type="button">
-        Checkout
-      </button>
+      <div class="cart-actions">
+        <button class="ghost-button" id="clearCartButton" type="button">Kosongkan</button>
+        <button class="primary-button checkout-button" id="checkoutButton" type="button">
+          Checkout
+        </button>
+      </div>
     </div>
   </aside>
 
@@ -167,6 +206,14 @@
         <h2 id="checkoutModalTitle">Ringkasan Pesanan</h2>
         <ul class="checkout-items" id="checkoutItems" aria-label="Ringkasan item pesanan"></ul>
 
+        <div class="summary-row">
+          <span>Subtotal produk</span>
+          <strong id="checkoutSubtotal">Rp0</strong>
+        </div>
+        <div class="summary-row">
+          <span>Ongkos kirim</span>
+          <strong id="checkoutShippingCost">Rp0</strong>
+        </div>
         <div class="summary-row summary-total checkout-total-row">
           <span>Total bayar</span>
           <strong id="checkoutTotal">Rp0</strong>
@@ -179,11 +226,31 @@
           </div>
           <div class="form-field">
             <label for="buyerPhone">Nomor HP</label>
-            <input type="tel" id="buyerPhone" name="buyerPhone" autocomplete="tel" required />
+            <input
+              type="tel"
+              id="buyerPhone"
+              name="buyerPhone"
+              autocomplete="tel"
+              inputmode="tel"
+              placeholder="08xxxxxxxxxx"
+              required
+            />
           </div>
           <div class="form-field">
             <label for="buyerAddress">Alamat</label>
             <textarea id="buyerAddress" name="buyerAddress" rows="3" autocomplete="street-address" required></textarea>
+          </div>
+          <div class="form-field">
+            <label for="shippingSelect">Metode pengiriman</label>
+            <select id="shippingSelect" name="shipping">
+              <option value="hemat">Hemat (5-7 hari) - Rp9.000</option>
+              <option value="reguler" selected>Reguler (2-4 hari) - Rp15.000</option>
+              <option value="kilat">Kilat (1 hari) - Rp30.000</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="buyerNote">Catatan (opsional)</label>
+            <textarea id="buyerNote" name="buyerNote" rows="2" placeholder="Contoh: titip di pos keamanan"></textarea>
           </div>
           <p class="form-error" id="checkoutError" hidden></p>
           <button class="primary-button" type="submit">Konfirmasi Pesanan</button>
@@ -194,6 +261,7 @@
         <div class="success-icon" aria-hidden="true">✅</div>
         <h2 id="checkoutSuccessTitle">Pesanan Berhasil</h2>
         <p id="checkoutSuccessMessage">Terima kasih! Pesanan simulasi Anda sudah dicatat.</p>
+        <p class="order-code" id="checkoutOrderCode"></p>
         <button class="primary-button" id="checkoutSuccessClose" type="button">Tutup</button>
       </div>
     </div>

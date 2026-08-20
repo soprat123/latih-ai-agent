@@ -2,6 +2,16 @@
   "use strict";
 
   const STORAGE_KEY = "lutful-store-cart";
+  const WISHLIST_KEY = "lutful-store-wishlist";
+  const THEME_KEY = "lutful-store-theme";
+
+  const SHIPPING_OPTIONS = {
+    hemat: { label: "Hemat (5-7 hari)", cost: 9000 },
+    reguler: { label: "Reguler (2-4 hari)", cost: 15000 },
+    kilat: { label: "Kilat (1 hari)", cost: 30000 }
+  };
+
+  const DEFAULT_SHIPPING = "reguler";
 
   const products = [
     {
@@ -9,6 +19,8 @@
       nama: "Headphone Bluetooth",
       kategori: "Elektronik",
       harga: 299000,
+      rating: 4.7,
+      terjual: 128,
       deskripsi: "Headphone nirkabel dengan bass dalam, baterai tahan lama, dan cocok untuk musik harian maupun rapat online.",
       emoji: "🎧",
       stok: 12
@@ -18,6 +30,8 @@
       nama: "Sepatu Sneakers Casual",
       kategori: "Fashion",
       harga: 450000,
+      rating: 4.5,
+      terjual: 86,
       deskripsi: "Sneakers nyaman untuk aktivitas harian. Desain kasual, ringan, dan mudah dipadukan dengan berbagai outfit.",
       emoji: "👟",
       stok: 8
@@ -27,6 +41,8 @@
       nama: "Kopi Arabika 250g",
       kategori: "Makanan",
       harga: 85000,
+      rating: 4.8,
+      terjual: 342,
       deskripsi: "Biji kopi arabika pilihan dengan aroma fruity dan aftertaste lembut. Cocok untuk manual brew maupun espresso.",
       emoji: "☕",
       stok: 25
@@ -36,6 +52,8 @@
       nama: "Jam Tangan Digital",
       kategori: "Aksesori",
       harga: 199000,
+      rating: 4.3,
+      terjual: 64,
       deskripsi: "Jam tangan digital sporty dengan tampilan jelas, tahan percikan air, dan cocok untuk gaya kasual.",
       emoji: "⌚",
       stok: 15
@@ -45,6 +63,8 @@
       nama: "Tas Ransel Laptop",
       kategori: "Fashion",
       harga: 325000,
+      rating: 4.6,
+      terjual: 155,
       deskripsi: "Ransel multifungsi dengan kompartemen laptop hingga 15 inci, bahan tahan air ringan, dan tali bahu empuk.",
       emoji: "🎒",
       stok: 10
@@ -54,6 +74,8 @@
       nama: "Bola Basket Ukuran 7",
       kategori: "Olahraga",
       harga: 150000,
+      rating: 4.4,
+      terjual: 47,
       deskripsi: "Bola basket grip kuat untuk latihan indoor maupun outdoor. Ukuran standar 7 untuk pemain dewasa.",
       emoji: "🏀",
       stok: 18
@@ -63,6 +85,8 @@
       nama: "Mouse Wireless Ergonomis",
       kategori: "Elektronik",
       harga: 175000,
+      rating: 4.2,
+      terjual: 210,
       deskripsi: "Mouse nirkabel nyaman digenggam, responsif, dan hemat baterai. Ideal untuk kerja maupun belajar.",
       emoji: "🖱️",
       stok: 0
@@ -72,6 +96,8 @@
       nama: "Botol Minum Olahraga 1L",
       kategori: "Olahraga",
       harga: 65000,
+      rating: 4.1,
+      terjual: 98,
       deskripsi: "Botol minum 1 liter bebas BPA, mudah dibawa, dan cocok untuk gym, lari, maupun aktivitas outdoor.",
       emoji: "🧴",
       stok: 30
@@ -81,6 +107,8 @@
       nama: "Kemeja Flanel Premium",
       kategori: "Fashion",
       harga: 189000,
+      rating: 4.5,
+      terjual: 73,
       deskripsi: "Kemeja flanel adem dengan potongan modern. Nyaman dipakai harian dan cocok untuk gaya kasual.",
       emoji: "👕",
       stok: 6
@@ -90,26 +118,62 @@
       nama: "Snack Granola Mix",
       kategori: "Makanan",
       harga: 45000,
+      rating: 4.9,
+      terjual: 411,
       deskripsi: "Camilan granola renyah dengan kacang dan kismis. Praktis dibawa sebagai bekal sehat.",
       emoji: "🥣",
       stok: 40
+    },
+    {
+      id: "p11",
+      nama: "Keyboard Mekanik TKL",
+      kategori: "Elektronik",
+      harga: 520000,
+      rating: 4.7,
+      terjual: 59,
+      deskripsi: "Keyboard mekanik tenkeyless dengan switch taktil, hot-swap, dan backlight putih hemat daya.",
+      emoji: "⌨️",
+      stok: 9
+    },
+    {
+      id: "p12",
+      nama: "Topi Baseball Katun",
+      kategori: "Aksesori",
+      harga: 79000,
+      rating: 4.0,
+      terjual: 132,
+      deskripsi: "Topi baseball bahan katun adem dengan strap belakang yang bisa disesuaikan ukuran kepala.",
+      emoji: "🧢",
+      stok: 22
     }
   ];
 
   const state = {
     cart: [],
+    wishlist: [],
     searchQuery: "",
     activeCategory: "Semua",
     sortBy: "default",
+    onlyWishlist: false,
     activeModal: null,
-    detailProductId: null
+    detailProductId: null,
+    shipping: DEFAULT_SHIPPING,
+    theme: "dark"
   };
 
   const els = {
+    themeToggle: document.getElementById("themeToggle"),
+    themeToggleIcon: document.getElementById("themeToggleIcon"),
+    themeToggleText: document.getElementById("themeToggleText"),
+    wishlistToggle: document.getElementById("wishlistToggle"),
+    wishlistBadge: document.getElementById("wishlistBadge"),
     productGrid: document.getElementById("productGrid"),
     emptyState: document.getElementById("emptyState"),
+    productSectionTitle: document.getElementById("productSectionTitle"),
+    resultInfo: document.getElementById("resultInfo"),
     searchForm: document.getElementById("searchForm"),
     searchInput: document.getElementById("searchInput"),
+    searchClear: document.getElementById("searchClear"),
     categoryList: document.getElementById("categoryList"),
     sortSelect: document.getElementById("sortSelect"),
     cartToggle: document.getElementById("cartToggle"),
@@ -120,6 +184,7 @@
     cartEmpty: document.getElementById("cartEmpty"),
     cartItemCount: document.getElementById("cartItemCount"),
     cartSubtotal: document.getElementById("cartSubtotal"),
+    clearCartButton: document.getElementById("clearCartButton"),
     checkoutButton: document.getElementById("checkoutButton"),
     overlay: document.getElementById("overlay"),
     toast: document.getElementById("toast"),
@@ -131,14 +196,19 @@
     checkoutFormView: document.getElementById("checkoutFormView"),
     checkoutSuccessView: document.getElementById("checkoutSuccessView"),
     checkoutItems: document.getElementById("checkoutItems"),
+    checkoutSubtotal: document.getElementById("checkoutSubtotal"),
+    checkoutShippingCost: document.getElementById("checkoutShippingCost"),
     checkoutTotal: document.getElementById("checkoutTotal"),
     checkoutForm: document.getElementById("checkoutForm"),
     checkoutError: document.getElementById("checkoutError"),
     buyerName: document.getElementById("buyerName"),
     buyerPhone: document.getElementById("buyerPhone"),
     buyerAddress: document.getElementById("buyerAddress"),
+    shippingSelect: document.getElementById("shippingSelect"),
+    buyerNote: document.getElementById("buyerNote"),
     checkoutSuccessClose: document.getElementById("checkoutSuccessClose"),
-    checkoutSuccessMessage: document.getElementById("checkoutSuccessMessage")
+    checkoutSuccessMessage: document.getElementById("checkoutSuccessMessage"),
+    checkoutOrderCode: document.getElementById("checkoutOrderCode")
   };
 
   const currencyFormatter = new Intl.NumberFormat("id-ID", {
@@ -149,6 +219,9 @@
   });
 
   let toastTimer = null;
+  let lastFocusedElement = null;
+
+  /* ===== Util ===== */
 
   function formatRupiah(value) {
     return currencyFormatter.format(Number(value) || 0);
@@ -167,16 +240,39 @@
     return products.find((product) => product.id === id) || null;
   }
 
-  function getCartItemCount() {
-    return state.cart.reduce((total, item) => total + item.qty, 0);
+  function readStorage(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      console.warn("localStorage tidak bisa dibaca:", error);
+      return null;
+    }
   }
 
-  function getCartSubtotal() {
-    return state.cart.reduce((total, item) => {
-      const product = getProductById(item.id);
-      if (!product) return total;
-      return total + product.harga * item.qty;
-    }, 0);
+  function writeStorage(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      console.warn("localStorage tidak bisa ditulis:", error);
+    }
+  }
+
+  function removeStorage(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.warn("localStorage tidak bisa dihapus:", error);
+    }
+  }
+
+  function renderStars(rating) {
+    const value = Number(rating) || 0;
+    const full = Math.round(value);
+    let stars = "";
+    for (let i = 1; i <= 5; i += 1) {
+      stars += i <= full ? "★" : "☆";
+    }
+    return stars;
   }
 
   function showToast(message) {
@@ -192,26 +288,58 @@
     }, 2200);
   }
 
-  function saveCart() {
-    try {
-      const payload = state.cart.map((item) => ({
-        id: item.id,
-        qty: item.qty
-      }));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    } catch (error) {
-      console.warn("Gagal menyimpan keranjang:", error);
+  /* ===== Tema ===== */
+
+  function applyTheme(theme) {
+    const nextTheme = theme === "light" ? "light" : "dark";
+    state.theme = nextTheme;
+    document.documentElement.setAttribute("data-theme", nextTheme);
+
+    const isLight = nextTheme === "light";
+    els.themeToggleIcon.textContent = isLight ? "☀️" : "🌙";
+    els.themeToggleText.textContent = isLight ? "Terang" : "Gelap";
+    els.themeToggle.setAttribute("aria-pressed", isLight ? "true" : "false");
+    els.themeToggle.setAttribute(
+      "aria-label",
+      isLight ? "Aktifkan tema gelap" : "Aktifkan tema terang"
+    );
+  }
+
+  function loadTheme() {
+    const saved = readStorage(THEME_KEY);
+    if (saved === "light" || saved === "dark") {
+      applyTheme(saved);
+      return;
     }
+
+    const prefersLight =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-color-scheme: light)").matches;
+
+    applyTheme(prefersLight ? "light" : "dark");
+  }
+
+  function toggleTheme() {
+    const next = state.theme === "light" ? "dark" : "light";
+    applyTheme(next);
+    writeStorage(THEME_KEY, next);
+  }
+
+  /* ===== Penyimpanan keranjang & favorit ===== */
+
+  function saveCart() {
+    const payload = state.cart.map((item) => ({ id: item.id, qty: item.qty }));
+    writeStorage(STORAGE_KEY, JSON.stringify(payload));
   }
 
   function loadCart() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        state.cart = [];
-        return;
-      }
+    const raw = readStorage(STORAGE_KEY);
+    if (!raw) {
+      state.cart = [];
+      return;
+    }
 
+    try {
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed)) {
         state.cart = [];
@@ -245,13 +373,107 @@
     } catch (error) {
       console.warn("Data keranjang rusak, direset:", error);
       state.cart = [];
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch (removeError) {
-        console.warn(removeError);
-      }
+      removeStorage(STORAGE_KEY);
     }
   }
+
+  function saveWishlist() {
+    writeStorage(WISHLIST_KEY, JSON.stringify(state.wishlist));
+  }
+
+  function loadWishlist() {
+    const raw = readStorage(WISHLIST_KEY);
+    if (!raw) {
+      state.wishlist = [];
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        state.wishlist = [];
+        return;
+      }
+
+      state.wishlist = parsed.filter(
+        (id, index) =>
+          typeof id === "string" &&
+          getProductById(id) &&
+          parsed.indexOf(id) === index
+      );
+      saveWishlist();
+    } catch (error) {
+      console.warn("Data favorit rusak, direset:", error);
+      state.wishlist = [];
+      removeStorage(WISHLIST_KEY);
+    }
+  }
+
+  function isWishlisted(productId) {
+    return state.wishlist.includes(productId);
+  }
+
+  function toggleWishlist(productId) {
+    const product = getProductById(productId);
+    if (!product) return;
+
+    if (isWishlisted(productId)) {
+      state.wishlist = state.wishlist.filter((id) => id !== productId);
+      showToast(`${product.nama} dihapus dari favorit.`);
+    } else {
+      state.wishlist.push(productId);
+      showToast(`${product.nama} ditambahkan ke favorit.`);
+    }
+
+    saveWishlist();
+    renderWishlistState();
+    renderProducts();
+
+    if (state.activeModal === "product" && state.detailProductId === productId) {
+      openProductDetail(productId, { keepFocus: true });
+    }
+  }
+
+  /* ===== Hitungan ===== */
+
+  function getCartItemCount() {
+    return state.cart.reduce((total, item) => total + item.qty, 0);
+  }
+
+  function getCartSubtotal() {
+    return state.cart.reduce((total, item) => {
+      const product = getProductById(item.id);
+      if (!product) return total;
+      return total + product.harga * item.qty;
+    }, 0);
+  }
+
+  function getShippingCost() {
+    const option = SHIPPING_OPTIONS[state.shipping] || SHIPPING_OPTIONS[DEFAULT_SHIPPING];
+    return option.cost;
+  }
+
+  function getShippingLabel() {
+    const option = SHIPPING_OPTIONS[state.shipping] || SHIPPING_OPTIONS[DEFAULT_SHIPPING];
+    return option.label;
+  }
+
+  function getGrandTotal() {
+    return getCartSubtotal() + getShippingCost();
+  }
+
+  function createOrderCode() {
+    const now = new Date();
+    const datePart = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0")
+    ].join("");
+    const randomPart = String(Math.floor(Math.random() * 9000) + 1000);
+    return `LS-${datePart}-${randomPart}`;
+  }
+
+  /* ===== Filter & sort ===== */
 
   function filterProducts() {
     const query = state.searchQuery.trim().toLowerCase();
@@ -262,9 +484,14 @@
         product.kategori.toLowerCase() === state.activeCategory.toLowerCase();
 
       const matchSearch =
-        !query || product.nama.toLowerCase().includes(query);
+        !query ||
+        product.nama.toLowerCase().includes(query) ||
+        product.kategori.toLowerCase().includes(query) ||
+        product.deskripsi.toLowerCase().includes(query);
 
-      return matchCategory && matchSearch;
+      const matchWishlist = !state.onlyWishlist || isWishlisted(product.id);
+
+      return matchCategory && matchSearch && matchWishlist;
     });
 
     switch (state.sortBy) {
@@ -277,6 +504,9 @@
       case "name-asc":
         list = [...list].sort((a, b) => a.nama.localeCompare(b.nama, "id"));
         break;
+      case "rating-desc":
+        list = [...list].sort((a, b) => b.rating - a.rating || b.terjual - a.terjual);
+        break;
       default:
         break;
     }
@@ -284,12 +514,38 @@
     return list;
   }
 
+  /* ===== Render ===== */
+
+  function renderResultInfo(total) {
+    const parts = [`${total} produk ditampilkan`];
+
+    if (state.activeCategory !== "Semua") {
+      parts.push(`kategori ${state.activeCategory}`);
+    }
+    if (state.searchQuery.trim()) {
+      parts.push(`pencarian "${state.searchQuery.trim()}"`);
+    }
+    if (state.onlyWishlist) {
+      parts.push("hanya favorit");
+    }
+
+    els.resultInfo.textContent = parts.join(" • ");
+    els.productSectionTitle.textContent = state.onlyWishlist
+      ? "Produk Favorit"
+      : "Produk Pilihan";
+  }
+
   function renderProducts() {
     const list = filterProducts();
     els.productGrid.innerHTML = "";
 
+    renderResultInfo(list.length);
+
     if (list.length === 0) {
       els.emptyState.hidden = false;
+      els.emptyState.textContent = state.onlyWishlist
+        ? "Belum ada produk favorit yang cocok dengan filter ini."
+        : "Produk tidak ditemukan";
       return;
     }
 
@@ -299,6 +555,9 @@
 
     list.forEach((product) => {
       const isOut = product.stok <= 0;
+      const isLow = !isOut && product.stok <= 8;
+      const liked = isWishlisted(product.id);
+
       const card = document.createElement("article");
       card.className = "product-card";
       card.dataset.productId = product.id;
@@ -310,10 +569,27 @@
       );
 
       card.innerHTML = `
-        <div class="product-image" aria-hidden="true">${product.emoji}</div>
+        <div class="product-media">
+          <div class="product-image" aria-hidden="true">${product.emoji}</div>
+          <button
+            class="wishlist-button ${liked ? "is-active" : ""}"
+            type="button"
+            data-action="toggle-wishlist"
+            data-id="${escapeHtml(product.id)}"
+            aria-pressed="${liked ? "true" : "false"}"
+            aria-label="${liked ? `Hapus ${escapeHtml(product.nama)} dari favorit` : `Simpan ${escapeHtml(product.nama)} ke favorit`}"
+          >${liked ? "❤️" : "🤍"}</button>
+          ${isOut ? '<span class="product-flag is-out">Habis</span>' : ""}
+          ${isLow ? `<span class="product-flag is-low">Sisa ${product.stok}</span>` : ""}
+        </div>
         <div class="product-body">
           <span class="product-category">${escapeHtml(product.kategori)}</span>
           <h3 class="product-name">${escapeHtml(product.nama)}</h3>
+          <p class="product-rating">
+            <span class="stars" aria-hidden="true">${renderStars(product.rating)}</span>
+            <span class="rating-value">${product.rating.toFixed(1)}</span>
+            <span class="rating-sold">· ${product.terjual} terjual</span>
+          </p>
           <p class="product-price">${formatRupiah(product.harga)}</p>
           <p class="product-stock ${isOut ? "is-out" : ""}">
             ${isOut ? "Stok Habis" : `Stok: ${product.stok}`}
@@ -337,6 +613,27 @@
     els.productGrid.appendChild(fragment);
   }
 
+  function renderWishlistState() {
+    const count = state.wishlist.length;
+
+    if (count > 0) {
+      els.wishlistBadge.hidden = false;
+      els.wishlistBadge.textContent = String(count);
+    } else {
+      els.wishlistBadge.hidden = true;
+      els.wishlistBadge.textContent = "0";
+    }
+
+    els.wishlistToggle.classList.toggle("is-active", state.onlyWishlist);
+    els.wishlistToggle.setAttribute("aria-pressed", state.onlyWishlist ? "true" : "false");
+    els.wishlistToggle.setAttribute(
+      "aria-label",
+      state.onlyWishlist
+        ? "Tampilkan semua produk"
+        : "Tampilkan hanya produk favorit"
+    );
+  }
+
   function renderCart() {
     const count = getCartItemCount();
     const subtotal = getCartSubtotal();
@@ -352,6 +649,7 @@
     els.cartItemCount.textContent = `${count} item`;
     els.cartSubtotal.textContent = formatRupiah(subtotal);
     els.checkoutButton.disabled = count === 0;
+    els.clearCartButton.disabled = count === 0;
 
     els.cartList.innerHTML = "";
 
@@ -416,6 +714,29 @@
     els.cartList.appendChild(fragment);
   }
 
+  function renderCheckoutSummary() {
+    els.checkoutItems.innerHTML = "";
+
+    state.cart.forEach((item) => {
+      const product = getProductById(item.id);
+      if (!product) return;
+
+      const li = document.createElement("li");
+      li.className = "checkout-item";
+      li.innerHTML = `
+        <span class="checkout-item-name">${product.emoji} ${escapeHtml(product.nama)} × ${item.qty}</span>
+        <span class="checkout-item-price">${formatRupiah(product.harga * item.qty)}</span>
+      `;
+      els.checkoutItems.appendChild(li);
+    });
+
+    els.checkoutSubtotal.textContent = formatRupiah(getCartSubtotal());
+    els.checkoutShippingCost.textContent = formatRupiah(getShippingCost());
+    els.checkoutTotal.textContent = formatRupiah(getGrandTotal());
+  }
+
+  /* ===== Overlay / drawer / modal ===== */
+
   function openOverlay() {
     els.overlay.hidden = false;
     document.body.classList.add("no-scroll");
@@ -425,16 +746,23 @@
     if (!state.activeModal) {
       els.overlay.hidden = true;
       document.body.classList.remove("no-scroll");
+      if (lastFocusedElement && document.contains(lastFocusedElement)) {
+        lastFocusedElement.focus();
+      }
+      lastFocusedElement = null;
+    }
+  }
+
+  function rememberFocus() {
+    if (!state.activeModal) {
+      lastFocusedElement = document.activeElement;
     }
   }
 
   function openCart() {
-    if (state.activeModal === "product") {
-      closeProductDetail();
-    }
-    if (state.activeModal === "checkout") {
-      closeCheckout();
-    }
+    rememberFocus();
+    if (state.activeModal === "product") closeProductDetail();
+    if (state.activeModal === "checkout") closeCheckout();
 
     state.activeModal = "cart";
     els.cartDrawer.hidden = false;
@@ -450,47 +778,64 @@
     closeOverlayIfIdle();
   }
 
-  function openProductDetail(productId) {
+  function openProductDetail(productId, options = {}) {
+    const { keepFocus = false } = options;
     const product = getProductById(productId);
     if (!product) return;
 
-    if (state.activeModal === "cart") {
-      closeCart();
-    }
-    if (state.activeModal === "checkout") {
-      closeCheckout();
-    }
+    if (!keepFocus) rememberFocus();
+    if (state.activeModal === "cart") closeCart();
+    if (state.activeModal === "checkout") closeCheckout();
 
     state.detailProductId = product.id;
     state.activeModal = "product";
 
     const isOut = product.stok <= 0;
+    const liked = isWishlisted(product.id);
 
     els.productDetail.innerHTML = `
       <div class="detail-image" aria-hidden="true">${product.emoji}</div>
       <div class="detail-body">
         <span class="product-category">${escapeHtml(product.kategori)}</span>
         <h2 id="productModalTitle" class="detail-name">${escapeHtml(product.nama)}</h2>
+        <p class="product-rating">
+          <span class="stars" aria-hidden="true">${renderStars(product.rating)}</span>
+          <span class="rating-value">${product.rating.toFixed(1)}</span>
+          <span class="rating-sold">· ${product.terjual} terjual</span>
+        </p>
         <p class="detail-price">${formatRupiah(product.harga)}</p>
         <p class="detail-stock ${isOut ? "is-out" : ""}">
           ${isOut ? "Stok Habis" : `Stok tersedia: ${product.stok}`}
         </p>
         <p class="detail-description">${escapeHtml(product.deskripsi)}</p>
-        <button
-          class="primary-button"
-          type="button"
-          data-action="add-to-cart-detail"
-          data-id="${escapeHtml(product.id)}"
-          ${isOut ? "disabled" : ""}
-        >
-          ${isOut ? "Stok Habis" : "Tambah ke Keranjang"}
-        </button>
+        <div class="detail-actions">
+          <button
+            class="primary-button"
+            type="button"
+            data-action="add-to-cart-detail"
+            data-id="${escapeHtml(product.id)}"
+            ${isOut ? "disabled" : ""}
+          >
+            ${isOut ? "Stok Habis" : "Tambah ke Keranjang"}
+          </button>
+          <button
+            class="ghost-button ${liked ? "is-active" : ""}"
+            type="button"
+            data-action="toggle-wishlist"
+            data-id="${escapeHtml(product.id)}"
+            aria-pressed="${liked ? "true" : "false"}"
+          >
+            ${liked ? "❤️ Favorit" : "🤍 Favoritkan"}
+          </button>
+        </div>
       </div>
     `;
 
     els.productModal.hidden = false;
     openOverlay();
-    els.productModalClose.focus();
+    if (!keepFocus) {
+      els.productModalClose.focus();
+    }
   }
 
   function closeProductDetail() {
@@ -509,7 +854,9 @@
       return;
     }
 
+    const previousFocus = lastFocusedElement;
     closeCart();
+    lastFocusedElement = previousFocus || els.cartToggle;
 
     state.activeModal = "checkout";
     els.checkoutFormView.hidden = false;
@@ -517,23 +864,10 @@
     els.checkoutError.hidden = true;
     els.checkoutError.textContent = "";
     els.checkoutForm.reset();
+    els.shippingSelect.value = state.shipping;
 
-    els.checkoutItems.innerHTML = "";
+    renderCheckoutSummary();
 
-    state.cart.forEach((item) => {
-      const product = getProductById(item.id);
-      if (!product) return;
-
-      const li = document.createElement("li");
-      li.className = "checkout-item";
-      li.innerHTML = `
-        <span class="checkout-item-name">${product.emoji} ${escapeHtml(product.nama)} × ${item.qty}</span>
-        <span class="checkout-item-price">${formatRupiah(product.harga * item.qty)}</span>
-      `;
-      els.checkoutItems.appendChild(li);
-    });
-
-    els.checkoutTotal.textContent = formatRupiah(getCartSubtotal());
     els.checkoutModal.hidden = false;
     openOverlay();
     els.buyerName.focus();
@@ -553,6 +887,8 @@
     closeProductDetail();
     closeCheckout();
   }
+
+  /* ===== Aksi keranjang ===== */
 
   function addToCart(productId, amount = 1) {
     const product = getProductById(productId);
@@ -624,6 +960,22 @@
     }
   }
 
+  function clearCart() {
+    if (state.cart.length === 0) {
+      showToast("Keranjang sudah kosong.");
+      return;
+    }
+    state.cart = [];
+    saveCart();
+    renderCart();
+    showToast("Keranjang dikosongkan.");
+  }
+
+  function isValidPhone(value) {
+    const digits = value.replace(/[\s-]/g, "");
+    return /^(\+62|62|0)[0-9]{8,13}$/.test(digits);
+  }
+
   function checkout(event) {
     event.preventDefault();
 
@@ -636,44 +988,89 @@
     const name = els.buyerName.value.trim();
     const phone = els.buyerPhone.value.trim();
     const address = els.buyerAddress.value.trim();
+    const note = els.buyerNote.value.trim();
 
-    if (!name || !phone || !address) {
+    function fail(message, field) {
       els.checkoutError.hidden = false;
-      els.checkoutError.textContent = "Semua field wajib diisi: nama, nomor HP, dan alamat.";
-      if (!name) {
-        els.buyerName.focus();
-      } else if (!phone) {
-        els.buyerPhone.focus();
-      } else {
-        els.buyerAddress.focus();
-      }
-      return;
+      els.checkoutError.textContent = message;
+      if (field) field.focus();
     }
 
-    const total = formatRupiah(getCartSubtotal());
+    if (!name || !phone || !address) {
+      if (!name) return fail("Nama pembeli wajib diisi.", els.buyerName);
+      if (!phone) return fail("Nomor HP wajib diisi.", els.buyerPhone);
+      return fail("Alamat pengiriman wajib diisi.", els.buyerAddress);
+    }
+
+    if (name.length < 3) {
+      return fail("Nama pembeli minimal 3 karakter.", els.buyerName);
+    }
+
+    if (!isValidPhone(phone)) {
+      return fail("Nomor HP tidak valid. Contoh: 081234567890.", els.buyerPhone);
+    }
+
+    if (address.length < 10) {
+      return fail("Alamat terlalu singkat, minimal 10 karakter.", els.buyerAddress);
+    }
+
+    const total = formatRupiah(getGrandTotal());
     const itemCount = getCartItemCount();
+    const shippingLabel = getShippingLabel();
+    const orderCode = createOrderCode();
 
     state.cart = [];
     saveCart();
     renderCart();
 
+    els.checkoutError.hidden = true;
     els.checkoutFormView.hidden = true;
     els.checkoutSuccessView.hidden = false;
     els.checkoutSuccessMessage.textContent =
-      `Terima kasih, ${name}! ${itemCount} item senilai ${total} berhasil dipesan (simulasi).`;
+      `Terima kasih, ${name}! ${itemCount} item senilai ${total} akan dikirim via ${shippingLabel} (simulasi).` +
+      (note ? ` Catatan: ${note}` : "");
+    els.checkoutOrderCode.textContent = `Kode pesanan: ${orderCode}`;
     els.checkoutSuccessClose.focus();
   }
 
+  /* ===== Event ===== */
+
+  function syncSearchClear() {
+    els.searchClear.hidden = els.searchInput.value.length === 0;
+  }
+
   function bindEvents() {
+    els.themeToggle.addEventListener("click", toggleTheme);
+
+    els.wishlistToggle.addEventListener("click", () => {
+      state.onlyWishlist = !state.onlyWishlist;
+      if (state.onlyWishlist && state.wishlist.length === 0) {
+        state.onlyWishlist = false;
+        showToast("Belum ada produk favorit.");
+      }
+      renderWishlistState();
+      renderProducts();
+    });
+
     els.searchForm.addEventListener("submit", (event) => {
       event.preventDefault();
       state.searchQuery = els.searchInput.value;
+      syncSearchClear();
       renderProducts();
     });
 
     els.searchInput.addEventListener("input", () => {
       state.searchQuery = els.searchInput.value;
+      syncSearchClear();
       renderProducts();
+    });
+
+    els.searchClear.addEventListener("click", () => {
+      els.searchInput.value = "";
+      state.searchQuery = "";
+      syncSearchClear();
+      renderProducts();
+      els.searchInput.focus();
     });
 
     els.categoryList.addEventListener("click", (event) => {
@@ -698,6 +1095,14 @@
     });
 
     els.productGrid.addEventListener("click", (event) => {
+      const wishButton = event.target.closest('[data-action="toggle-wishlist"]');
+      if (wishButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleWishlist(wishButton.dataset.id);
+        return;
+      }
+
       const addButton = event.target.closest('[data-action="add-to-cart"]');
       if (addButton) {
         event.preventDefault();
@@ -731,6 +1136,7 @@
     });
 
     els.cartClose.addEventListener("click", closeCart);
+    els.clearCartButton.addEventListener("click", clearCart);
 
     els.cartList.addEventListener("click", (event) => {
       const button = event.target.closest("button[data-action]");
@@ -754,6 +1160,12 @@
     els.productModalClose.addEventListener("click", closeProductDetail);
 
     els.productDetail.addEventListener("click", (event) => {
+      const wishButton = event.target.closest('[data-action="toggle-wishlist"]');
+      if (wishButton) {
+        toggleWishlist(wishButton.dataset.id);
+        return;
+      }
+
       const button = event.target.closest('[data-action="add-to-cart-detail"]');
       if (!button || button.disabled) return;
       addToCart(button.dataset.id);
@@ -768,6 +1180,12 @@
     els.checkoutModalClose.addEventListener("click", closeCheckout);
     els.checkoutSuccessClose.addEventListener("click", closeCheckout);
     els.checkoutForm.addEventListener("submit", checkout);
+
+    els.shippingSelect.addEventListener("change", () => {
+      const value = els.shippingSelect.value;
+      state.shipping = SHIPPING_OPTIONS[value] ? value : DEFAULT_SHIPPING;
+      renderCheckoutSummary();
+    });
 
     els.checkoutModal.addEventListener("click", (event) => {
       if (event.target === els.checkoutModal) {
@@ -787,50 +1205,20 @@
   }
 
   function init() {
-    const required = [
-      "productGrid",
-      "emptyState",
-      "searchForm",
-      "searchInput",
-      "categoryList",
-      "sortSelect",
-      "cartToggle",
-      "cartBadge",
-      "cartDrawer",
-      "cartClose",
-      "cartList",
-      "cartEmpty",
-      "cartItemCount",
-      "cartSubtotal",
-      "checkoutButton",
-      "overlay",
-      "toast",
-      "productModal",
-      "productModalClose",
-      "productDetail",
-      "checkoutModal",
-      "checkoutModalClose",
-      "checkoutFormView",
-      "checkoutSuccessView",
-      "checkoutItems",
-      "checkoutTotal",
-      "checkoutForm",
-      "checkoutError",
-      "buyerName",
-      "buyerPhone",
-      "buyerAddress",
-      "checkoutSuccessClose",
-      "checkoutSuccessMessage"
-    ];
-
+    const required = Object.keys(els);
     const missing = required.filter((key) => !els[key]);
+
     if (missing.length > 0) {
       console.error("Elemen DOM tidak ditemukan:", missing.join(", "));
       return;
     }
 
+    loadTheme();
     loadCart();
+    loadWishlist();
     bindEvents();
+    syncSearchClear();
+    renderWishlistState();
     renderProducts();
     renderCart();
   }
